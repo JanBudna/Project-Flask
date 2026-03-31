@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notes</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Notes</title>
+    </head>
 
-<body>
-    <h2>Notes</h2>
-    <h3>Welcom back: {{ user }}!</h3>
+    <body>
+        <h2>Notes</h2>
+        <h3>Welcom back: {{ user }}!</h3>
 
-    <textarea name="" id="note" cols="50" rows="10" placeholder="Write down your notes..."></textarea><br>
-    <button type="button">Save</button>
-</body>
+        <form method="post">
+            <textarea name="note" id="notes" cols="50" rows="10" placeholder="Write down your notes...">{{ note }}</textarea><br>
+            <button type="submit">Save</button>
+        </form>
+    </body>
 
 </html>

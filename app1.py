@@ -47,12 +47,21 @@ def login():
 
     return render_template("login.html")
 
-@app.route("/dashboard")
+@app.route("/dashboard", methods = ["GET", "POST"])
 def dashboard():
     if "user" not in session:
         return redirect("/login")
     
-    return render_template("dashboard.html", user=session["user"])
+    if request.method == "POST":
+        note = request.form["note"]
+        users.update(
+            {"note" : note},
+            User.username == session["user"]
+        )
+
+    user = users.get(User.username == session["user"])
+        
+    return render_template("dashboard.html", user=session["user"], note=user.get("note"))
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
