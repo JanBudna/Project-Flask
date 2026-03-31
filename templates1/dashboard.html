@@ -12,12 +12,14 @@
 
         <h3>Welcome back: {{ user }}!</h3>
         <form method="post">
-            <input type="text" name="title" placeholder="Write down the title..." required><br>
+            <input type="text" name="title" placeholder="Write down the title..." required><br><br>
             <textarea name="content" id="notes" cols="50" rows="10" placeholder="Write down your notes..."></textarea><br>
             <button type="submit">Add note</button>
         </form>
 
         <h3>Your notes:</h3>
+        <button type="submit">Delete note</button>
+
         <ul>
         {% for note in notes %}
             <li>{{ note.title }}</li>
