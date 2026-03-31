@@ -1,1 +1,1 @@
-{"users": {"1": {"username": "Jan", "password": "1234", "note": ""}}}
+{"users": {"1": {"username": "Jan", "password": "1234", "note": "", "notes": [{"title": "Rojstni dan", "content": "Vesel bo\u017ei\u010d\r\n"}, {"title": "Rojstni dan", "content": "Vesel bo\u017ei\u010d"}, {"title": "R", "content": ""}, {"title": "Nejc Velikanje", "content": "Ocene so stabilne"}]}}}

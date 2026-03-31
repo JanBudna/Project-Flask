@@ -9,12 +9,20 @@
 
     <body>
         <h2>Notes</h2>
-        <h3>Welcom back: {{ user }}!</h3>
 
+        <h3>Welcome back: {{ user }}!</h3>
         <form method="post">
-            <textarea name="note" id="notes" cols="50" rows="10" placeholder="Write down your notes...">{{ note }}</textarea><br>
-            <button type="submit">Save</button>
+            <input type="text" name="title" placeholder="Write down the title..." required><br>
+            <textarea name="content" id="notes" cols="50" rows="10" placeholder="Write down your notes..."></textarea><br>
+            <button type="submit">Add note</button>
         </form>
+
+        <h3>Your notes:</h3>
+        <ul>
+        {% for note in notes %}
+            <li>{{ note.title }}</li>
+        {% endfor %}
+        </ul>
     </body>
 
 </html>

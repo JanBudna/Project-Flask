@@ -27,7 +27,7 @@ def register():
         if users.search(User.username == username):
             return "Uporabnik že obstaja"
 
-        users.insert({"username" : username, "password" : password, "note" : ""})
+        users.insert({"username" : username, "password" : password, "note" : []})
         return redirect("/login")
     else:
         return render_template("register.html")
@@ -52,16 +52,25 @@ def dashboard():
     if "user" not in session:
         return redirect("/login")
     
+    user = users.get(User.username == session["user"])
+    
     if request.method == "POST":
-        note = request.form["note"]
+        content = request.form["content"]
+        title = request.form["title"]
+
+        if not title:
+            return "Title is requred!"
+        
+        new_note = {"title" : title, "content" : content}
+        notes = user.get("notes") or []
+        notes.append(new_note)
+
         users.update(
-            {"note" : note},
+            {"notes" : notes},
             User.username == session["user"]
         )
-
-    user = users.get(User.username == session["user"])
         
-    return render_template("dashboard.html", user=session["user"], note=user.get("note"))
+    return render_template("dashboard.html", user=session["user"], notes=user.get("notes"))
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
