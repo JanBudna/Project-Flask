@@ -15,9 +15,10 @@
             <button type="submit">Logout</button>
         </form><br>
 
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <input type="hidden" name="action" value="add">
-            <textarea name="content" cols="50" rows="10"></textarea><br>
+            <textarea name="content" cols="50" rows="5"></textarea><br><br>
+            <input type="file" name="image"><br><br>
             <button type="submit">Add post</button>
         </form>
         
@@ -28,7 +29,11 @@
             {% for post in user.post %}
                 <p>
                     <strong>{{ user.username }}</strong><br>
-                    {{ post.content }}
+                    {{ post.content }}<br>
+
+                    {% if post.image %}
+                        <img src="{{ post.image }}" width="200">
+                    {% endif %}
                 </p>
             {% endfor %}
         {% endfor %}

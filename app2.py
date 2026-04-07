@@ -1,5 +1,7 @@
 from flask import Flask, render_template, session, request, redirect, jsonify
 from tinydb import TinyDB, Query
+import os
+from werkzeug.utils import secure_filename
 
 app = Flask(
     __name__,
@@ -7,6 +9,8 @@ app = Flask(
     static_folder="static2"
 )
 app.secret_key = "adminCode08"
+UPLOAD_FOLDER = "static2/uploads"
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 db = TinyDB("database1.json")
 users = db.table("users")
@@ -71,7 +75,16 @@ def media():
 
         if action == "add":
             content = request.form.get("content")
-            new_post = {"content": content}
+            file = request.files.get("image")
+            image_path = ""
+
+            if file and file.filename != "":
+                filename = secure_filename(file.filename)
+                filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+                file.save(filepath)
+                image_path = filepath
+
+            new_post = {"content": content, "image": image_path}
             posts.append(new_post)
             users.update({"post": posts}, User.username == session["user"])
             return redirect("/media")
