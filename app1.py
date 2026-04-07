@@ -47,39 +47,60 @@ def login():
 
     return render_template("login.html")
 
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/login")
+
 @app.route("/dashboard", methods=["GET", "POST"])
 def dashboard():
     if "user" not in session:
         return redirect("/login")
 
     user = users.get(User.username == session["user"])
-
     if user is None:
         session.clear()
         return redirect("/login")
 
     notes = user.get("notes", [])
 
+    edit_note = None
+
     if request.method == "POST":
         action = request.form.get("action")
+
         if action == "add":
-            content = request.form["content"]
-            title = request.form["title"]
+            title = request.form.get("title")
+            content = request.form.get("content")
             if not title:
                 return "Title is required!"
-            
             new_note = {"title": title, "content": content}
             notes.append(new_note)
+            users.update({"notes": notes}, User.username == session["user"])
+            return redirect("/dashboard")
 
         elif action == "delete":
-            note_id = int(request.form["note_id"])
+            note_id = int(request.form.get("note_id"))
             if 0 <= note_id < len(notes):
                 notes.pop(note_id)
+                users.update({"notes": notes}, User.username == session["user"])
+            return redirect("/dashboard")
 
-        users.update({"notes": notes}, User.username == session["user"])
-        return redirect("/dashboard")
+        elif action == "edit":
+            note_id = int(request.form.get("note_id"))
+            if 0 <= note_id < len(notes):
+                edit_note = {"id": note_id, **notes[note_id]}
 
-    return render_template("dashboard.html", user=session["user"], notes=notes)
+        elif action == "update":
+            note_id = int(request.form.get("note_id"))
+            title = request.form.get("title")
+            content = request.form.get("content")
+            if 0 <= note_id < len(notes):
+                notes[note_id] = {"title": title, "content": content}
+                users.update({"notes": notes}, User.username == session["user"])
+            return redirect("/dashboard")
+
+    return render_template("dashboard.html", user=session["user"], notes=notes, edit_note=edit_note)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

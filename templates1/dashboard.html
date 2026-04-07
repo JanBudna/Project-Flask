@@ -1,39 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Notes</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes</title>
+</head>
 
-    <body>
-        <h2>Notes</h2>
+<body>
+    <h2>Notes</h2>
 
-        <h3>Welcome back: {{ user }}!</h3>
-        <form method="post">
-            <input type="hidden" name="action" value="add">
-            <input type="text" name="title" placeholder="Write down the title..." required><br><br>
-            <textarea name="content" cols="50" rows="10"></textarea><br>
-            <button type="submit">Add note</button>
-        </form>
+    <h3>Welcome back: {{ user }}!</h3>
 
-        <h3>Your notes:</h3>
+    {% if not edit_note %}
+    <form method="post">
+        <input type="hidden" name="action" value="add">
+        <input type="text" name="title" placeholder="Write down the title..." required><br><br>
+        <textarea name="content" cols="50" rows="10"></textarea><br>
+        <button type="submit">Add note</button>
+    </form>
+    {% endif %}
 
-        <ul>
-        {% for note in notes %}
-            <li>
-                <b>{{ note.title }}</b>
-                <form method="post" style="display:inline;">
-                    <input type="hidden" name="action" value="delete">
-                    <input type="hidden" name="note_id" value="{{ loop.index0 }}">
-                    <button type="submit" onclick="return confirm('Delete note?')">
-                        Delete
-                    </button>
-                </form>
-            </li>
-        {% endfor %}
-        </ul>
-    </body>
+    {% if edit_note %}
+    <h3>Edit Note</h3>
+    <form method="post">
+        <input type="hidden" name="action" value="update">
+        <input type="hidden" name="note_id" value="{{ edit_note.id }}">
+        <input type="text" name="title" value="{{ edit_note.title }}" required><br><br>
+        <textarea name="content" cols="50" rows="10">{{ edit_note.content }}</textarea><br>
+        <button type="submit">Save changes</button>
+    </form>
+    {% endif %}
+
+    <h3>Your notes:</h3>
+
+    <ul>
+    {% for note in notes %}
+        <li>
+            <b>{{ note.title }}</b><br>
+            <form method="post" style="display:inline;">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="note_id" value="{{ loop.index0 }}">
+                <button type="submit">Delete</button>
+            </form>
+            
+            <form method="post" style="display:inline;">
+                <input type="hidden" name="action" value="edit">
+                <input type="hidden" name="note_id" value="{{ loop.index0 }}">
+                <button type="submit">Edit</button>
+            </form>
+        </li>
+    {% endfor %}
+    </ul>
+
+    <form action="/logout" method="get">
+        <button type="submit">Logout</button>
+    </form>
+
+</body>
 
 </html>

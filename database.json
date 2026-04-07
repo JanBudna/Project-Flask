@@ -1,1 +1,1 @@
-{"users": {"1": {"username": "jan", "password": "1234", "notes": []}}}
+{"users": {"1": {"username": "jan", "password": "1234", "notes": []}, "2": {"username": "jbudna", "password": "1234", "notes": [{"title": "Brawlhalla", "content": "Zabavno, lepo\r\nFuck rupture, mordex, loki"}]}}}
