@@ -8,13 +8,31 @@
     </head>
 
     <body>
-        <h1>Guardians</h1>
-
+        <h1>Scambook</h1>
         <h3>Welcome back {{ user }}</h3>
 
         <form action="/logout" method="get">
             <button type="submit">Logout</button>
+        </form><br>
+
+        <form method="post">
+            <input type="hidden" name="action" value="add">
+            <textarea name="content" cols="50" rows="10"></textarea><br>
+            <button type="submit">Add post</button>
         </form>
+        
+        <hr>
+
+        
+        {% for user in all_users %}
+            {% for post in user.post %}
+                <p>
+                    <strong>{{ user.username }}</strong><br>
+                    {{ post.content }}
+                </p>
+            {% endfor %}
+        {% endfor %}
+        
     </body>
 
 </html>

@@ -58,6 +58,7 @@ def dashboard():
         return redirect("/login")
 
     user = users.get(User.username == session["user"])
+    
     if user is None:
         session.clear()
         return redirect("/login")
