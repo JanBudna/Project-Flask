@@ -4,40 +4,71 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Guardians</title>
+        <title>Scambook</title>
+
+        <!-- jQuery (OBVEZNO za AJAX) -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
 
     <body>
+
         <h1>Scambook</h1>
         <h3>Welcome back {{ user }}</h3>
 
         <form action="/logout" method="get">
             <button type="submit">Logout</button>
-        </form><br>
+        </form>
+
+        <br>
 
         <form method="post" enctype="multipart/form-data">
             <input type="hidden" name="action" value="add">
-            <textarea name="content" cols="50" rows="5"></textarea><br><br>
+            <textarea name="content" cols="50" rows="5" placeholder="Write something..."></textarea><br><br>
             <input type="file" name="image"><br><br>
             <button type="submit">Add post</button>
         </form>
-        
+
         <hr>
 
-        
-        {% for user in all_users %}
-            {% for post in user.post %}
-                <p>
-                    <strong>{{ user.username }}</strong><br>
+        {% for u in all_users %}
+            {% set user_id = loop.index0 %}
+            {% for post in u.post %}
+                {% set post_id = loop.index0 %}
+                <div>
+                    <strong>{{ u.username }}</strong>
                     {{ post.content }}<br>
 
                     {% if post.image %}
-                        <img src="{{ post.image }}" width="200">
+                        <img src="{{ post.image }}" width="250"><br>
                     {% endif %}
-                </p>
+
+                    <button onclick="likePost(this, '{{ user_id }}', '{{ post_id }}')">
+                        👍 <span>{{ post.likes or 0 }}</span>
+                    </button><br><br>
+                </div>
             {% endfor %}
         {% endfor %}
-        
+
     </body>
+
+    <script>
+        function likePost(button, userId, postId) {
+
+            $.ajax({
+                url: "/media",
+                method: "POST",
+                data: {
+                    action: "like",
+                    user_id: parseInt(userId),
+                    post_id: parseInt(postId)
+                },
+                success: function(result) {
+                    if (result.status === "success") {
+                        $(button).find("span").text(result.likes);
+                    }
+                }
+            });
+        }
+    </script>
 
 </html>

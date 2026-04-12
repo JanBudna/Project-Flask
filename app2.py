@@ -56,19 +56,19 @@ def logout():
     session.clear()
     return redirect("/login")
 
-@app.route("/media", methods = ["GET", "POST"])
+@app.route("/media", methods=["GET", "POST"])
 def media():
     if "user" not in session:
         return redirect("/login")
-    
-    user = users.get(User.username == session["user"])
-    all_users = users.all() 
-    
-    if user is None:
+
+    current_user = users.get(User.username == session["user"])
+
+    if current_user is None:
         session.clear()
         return redirect("/login")
 
-    posts = user.get("post", [])
+    all_users = users.all()
+    posts = current_user.get("post", [])
 
     if request.method == "POST":
         action = request.form.get("action")
@@ -84,10 +84,34 @@ def media():
                 file.save(filepath)
                 image_path = filepath
 
-            new_post = {"content": content, "image": image_path}
+            new_post = {"content": content, "image": image_path, "likes": 0, "liked_by": []}
             posts.append(new_post)
             users.update({"post": posts}, User.username == session["user"])
             return redirect("/media")
+
+        elif action == "like":
+            username = session["user"]
+            user_id = int(request.form.get("user_id"))
+            post_id = int(request.form.get("post_id"))
+            all_users = users.all()
+
+            if 0 <= user_id < len(all_users):
+                user_posts = all_users[user_id].get("post", [])
+                if 0 <= post_id < len(user_posts):
+                    post = user_posts[post_id]
+
+                    if "liked_by" not in post:
+                        post["liked_by"] = []
+
+                    if username in post["liked_by"]:
+                        return jsonify({"status": "error", "message": "Already liked"})
+                    
+                    post["liked_by"].append(username)
+                    post["likes"] = post.get("likes", 0) + 1
+                    users.update({"post": user_posts}, User.username == all_users[user_id]["username"])
+                    return jsonify({"status": "success", "likes": post["likes"]})
+
+            return jsonify({"status": "error"})
 
     return render_template("media.html", user=session["user"], post=posts, all_users=all_users)
 
