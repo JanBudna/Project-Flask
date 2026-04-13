@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Yu-Gi-Oh! Market</title>
+    </head>
+
+    <body>
+        <h1>Yu-Gi-Oh! Market</h1>
+        <h3>Welcome back {{ user }}</h3>
+
+        <form action="/logout" method="get">
+            <button type="submit">Logout</button>
+        </form>
+
+        <form action="search" method="post">
+            <input type="text" name="cardName" placeholder="Search the card...">
+        </form>
+
+        <hr>
+
+        <form action="add" method="post">
+            <input type="text" name="quantity" placeholder="Write down how many cards you have...">
+            <input type="text" name="name" placeholder="Write down card name to add...">
+            <input type="text" name="price" placeholder="Write down cards price...">
+        </form>
+    </body>
+
+</html>
